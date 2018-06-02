@@ -16,7 +16,7 @@ import org.apache.camel.spi.UriPath;
  * Represents a PojoMapper endpoint.
  */
 @UriEndpoint(scheme = "pojo-mapper", title = "PojoMapper", syntax = "pojo-mapper:name",
-        consumerClass = PojoMapperConsumer.class, label = "custom")
+        producerOnly = true, label = "custom")
 public class PojoMapperEndpoint extends DefaultEndpoint {
     @UriPath
     @Metadata(required = "true")
