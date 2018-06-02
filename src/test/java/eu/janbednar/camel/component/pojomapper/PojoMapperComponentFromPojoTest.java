@@ -206,7 +206,7 @@ public class PojoMapperComponentFromPojoTest extends CamelTestSupport {
         assertMockEndpointsSatisfied();
         PojoWithoutAnnotations result = mock.getExchanges().get(0).getIn().getBody(PojoWithoutAnnotations.class);
         assertEquals(1, result.getPrivateInt());
-        assertEquals(true, result.isPrivateBoolean());
+        assertTrue(result.isPrivateBoolean());
         assertEquals(1, result.getPrivateByte());
         assertEquals('C', result.getPrivateChar());
         assertEquals(4f, result.getPrivateFloat(), 0f);
@@ -255,7 +255,7 @@ public class PojoMapperComponentFromPojoTest extends CamelTestSupport {
 
         PojoWithoutAnnotations result = mock.getExchanges().get(0).getIn().getBody(PojoWithoutAnnotations.class);
         assertEquals(1, result.getPrivateInt());
-        assertEquals(true, result.isPrivateBoolean());
+        assertTrue(result.isPrivateBoolean());
         assertEquals(1, result.getPrivateByte());
         assertEquals('C', result.getPrivateChar());
         assertEquals(4f, result.getPrivateFloat(), 0f);
@@ -279,7 +279,7 @@ public class PojoMapperComponentFromPojoTest extends CamelTestSupport {
     }
 
     @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
+    protected RouteBuilder createRouteBuilder() {
         return new RouteBuilder() {
             public void configure() {
                 from("direct:defaults")
