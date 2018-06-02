@@ -21,7 +21,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
 
     @Test
     public void testPojoMapperLongWithDate() throws Exception {
-        Map<String,Object> headers = new HashMap<>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("fastTime", 123456L);
         sendBody("direct:defaults", new Date(), headers);
 
@@ -36,7 +36,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
 
     @Test
     public void testNestedPojo() throws Exception {
-        Map<String,Object> headers = new HashMap<>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("root", "a");
         headers.put("nested", "b");
         headers.put("nestedNested", "c");
@@ -56,7 +56,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
 
     @Test
     public void testPojoMapperIntegerWithDate() throws Exception {
-        Map<String,Object> headers = new HashMap<>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("fastTime", 123456);
         sendBody("direct:defaults", new Date(), headers);
 
@@ -74,7 +74,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
         exchange.setProperty("root", "property");
         exchange.getIn().setBody(new RootPojo());
 
-        template.send("direct:fieldLocationHeader",exchange);
+        template.send("direct:fieldLocationHeader", exchange);
         MockEndpoint mock = getMockEndpoint("mock:resultFieldLocationHeader");
         mock.expectedMinimumMessageCount(1);
 
@@ -89,7 +89,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
         exchange.setProperty("root", "property");
         exchange.getIn().setBody(new RootPojo());
 
-        template.send("direct:fieldLocationProperty",exchange);
+        template.send("direct:fieldLocationProperty", exchange);
         MockEndpoint mock = getMockEndpoint("mock:resultFieldLocationProperty");
         mock.expectedMinimumMessageCount(1);
 
@@ -104,7 +104,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
         exchange.setProperty("root", "property");
         exchange.getIn().setBody(new RootPojo());
 
-        template.send("direct:fieldLocationPropertyHeader",exchange);
+        template.send("direct:fieldLocationPropertyHeader", exchange);
         MockEndpoint mock = getMockEndpoint("mock:resultFieldLocationPropertyHeader");
         mock.expectedMinimumMessageCount(1);
 
@@ -119,7 +119,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
         exchange.setProperty("root", "property");
         exchange.getIn().setBody(new RootPojo());
 
-        template.send("direct:fieldLocationHeaderProperty",exchange);
+        template.send("direct:fieldLocationHeaderProperty", exchange);
         MockEndpoint mock = getMockEndpoint("mock:resultFieldLocationHeaderProperty");
         mock.expectedMinimumMessageCount(1);
 
@@ -129,7 +129,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
 
     @Test
     public void testPojoMapperWithAnnotations() throws Exception {
-        Map<String,Object> headers = new HashMap<>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("ignored", 123);
         headers.put("objectHeader", 456);
         sendBody("direct:defaults", new PojoWithAnnotations(), headers);
@@ -145,7 +145,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
 
     @Test
     public void testLogMissingHeader() throws Exception {
-        Map<String,Object> headers = new HashMap<>();
+        Map<String, Object> headers = new HashMap<>();
         sendBody("direct:levelError", new PojoWithoutAnnotations(), headers);
 
         MockEndpoint mock = getMockEndpoint("mock:resultLevelError");
@@ -156,8 +156,8 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
 
     @Test
     public void testMultipleItterations() throws Exception {
-        Map<String,Object> headers = new HashMap<>();
-        headers.put("root","root");
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("root", "root");
         sendBody("direct:multipleIterations", new RootPojo(), headers);
 
         MockEndpoint mock = getMockEndpoint("mock:resultMultipleIterations");
@@ -168,7 +168,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
 
     @Test
     public void testThrowMissingHeader() throws Exception {
-        Map<String,Object> headers = new HashMap<>();
+        Map<String, Object> headers = new HashMap<>();
         sendBody("direct:throw", new PojoWithoutAnnotations(), headers);
 
         MockEndpoint mockResult = getMockEndpoint("mock:resultThrow");
@@ -179,13 +179,13 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
 
         assertMockEndpointsSatisfied();
         assertEquals("Field PojoWithoutAnnotations#privateInt of type int, key privateInt not found",
-            mockException.getExchanges().get(0).getIn().getBody()
+                mockException.getExchanges().get(0).getIn().getBody()
         );
     }
 
     @Test
     public void testPojoMapperWithoutAnnotations_defaults() throws Exception {
-        Map<String,Object> headers = new HashMap<>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("privateInt", 1);
         headers.put("privateBoolean", true);
         headers.put("privateByte", 1);
@@ -196,9 +196,9 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
         headers.put("privateShort", 6);
         headers.put("privateDate", new Date(123123123));
         headers.put("privateObject", "abc");
-        headers.put("privateByteArray", new byte[]{1,0,1});
-        headers.put("privateStringArray", new String[]{"a","b"});
-        headers.put("privateListString", Arrays.asList("c","d"));
+        headers.put("privateByteArray", new byte[]{1, 0, 1});
+        headers.put("privateStringArray", new String[]{"a", "b"});
+        headers.put("privateListString", Arrays.asList("c", "d"));
 
         sendBody("direct:defaults", new PojoWithoutAnnotations(), headers);
 
@@ -207,7 +207,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
 
         assertMockEndpointsSatisfied();
         PojoWithoutAnnotations result = mock.getExchanges().get(0).getIn().getBody(PojoWithoutAnnotations.class);
-        assertEquals(1,result.getPrivateInt());
+        assertEquals(1, result.getPrivateInt());
         assertEquals(true, result.isPrivateBoolean());
         assertEquals(1, result.getPrivateByte());
         assertEquals('C', result.getPrivateChar());
@@ -227,13 +227,13 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
         assertEquals("c", result.getPrivateListString().get(0));
         assertEquals("d", result.getPrivateListString().get(1));
 
-        assertEquals(3d, result.getPrivateDouble(),0d);
+        assertEquals(3d, result.getPrivateDouble(), 0d);
 
     }
 
     @Test
     public void testPojoMapperWithoutAnnotations_prefix() throws Exception {
-        Map<String,Object> headers = new HashMap<>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("SomePrefixprivateInt", 1);
         headers.put("SomePrefixprivateBoolean", true);
         headers.put("SomePrefixprivateByte", 1);
@@ -244,9 +244,9 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
         headers.put("SomePrefixprivateShort", 6);
         headers.put("SomePrefixprivateDate", new Date(123123123));
         headers.put("SomePrefixprivateObject", "abc");
-        headers.put("SomePrefixprivateByteArray", new byte[]{1,0,1});
-        headers.put("SomePrefixprivateStringArray", new String[]{"a","b"});
-        headers.put("SomePrefixprivateListString", Arrays.asList("c","d"));
+        headers.put("SomePrefixprivateByteArray", new byte[]{1, 0, 1});
+        headers.put("SomePrefixprivateStringArray", new String[]{"a", "b"});
+        headers.put("SomePrefixprivateListString", Arrays.asList("c", "d"));
 
         sendBody("direct:prefix", new PojoWithoutAnnotations(), headers);
 
@@ -256,7 +256,7 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
         assertMockEndpointsSatisfied();
 
         PojoWithoutAnnotations result = mock.getExchanges().get(0).getIn().getBody(PojoWithoutAnnotations.class);
-        assertEquals(1,result.getPrivateInt());
+        assertEquals(1, result.getPrivateInt());
         assertEquals(true, result.isPrivateBoolean());
         assertEquals(1, result.getPrivateByte());
         assertEquals('C', result.getPrivateChar());
@@ -276,11 +276,11 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
         assertEquals("c", result.getPrivateListString().get(0));
         assertEquals("d", result.getPrivateListString().get(1));
 
-        assertEquals(3d, result.getPrivateDouble(),0d);
+        assertEquals(3d, result.getPrivateDouble(), 0d);
 
     }
 
-    private void assertHeaders(Exchange exchange, Map<String,Object> headers){
+    private void assertHeaders(Exchange exchange, Map<String, Object> headers) {
         headers.entrySet().forEach(e -> {
             assertMessageHeader(exchange.getIn(), e.getKey(), e.getValue());
         });
@@ -336,15 +336,15 @@ public class PojoMapperComponentToPojoTest extends CamelTestSupport {
 
                 from("direct:throw")
                         .onException(Exception.class)
-                            .setBody(exceptionMessage())
-                            .to("mock:exceptionThrow")
-                            .end()
+                        .setBody(exceptionMessage())
+                        .to("mock:exceptionThrow")
+                        .end()
                         .to("pojo-mapper://throw?throwExceptionOnMissingSource=true")
                         .to("mock:resultThrow");
 
                 RouteDefinition d = from("direct:multipleIterations");
-                for (int i = 0;i<=10;i++){
-                    d.to("pojo-mapper:"+i);
+                for (int i = 0; i <= 10; i++) {
+                    d.to("pojo-mapper:" + i);
                 }
                 d.to("mock:resultMultipleIterations");
             }

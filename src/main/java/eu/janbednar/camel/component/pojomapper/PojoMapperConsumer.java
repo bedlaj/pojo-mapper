@@ -1,10 +1,10 @@
 package eu.janbednar.camel.component.pojomapper;
 
-import java.util.Date;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.impl.ScheduledPollConsumer;
+
+import java.util.Date;
 
 /**
  * The PojoMapper consumer.

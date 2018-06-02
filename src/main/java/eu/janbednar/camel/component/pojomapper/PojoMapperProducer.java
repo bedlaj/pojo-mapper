@@ -40,14 +40,19 @@ public class PojoMapperProducer extends DefaultProducer {
     }
 
     public void process(Exchange exchange) throws Exception {
-        switch (endpoint.getPojoDirection()){
-            case FROM: processDirectionFromPojo(exchange);return;
-            case TO: processDirectionToPojo(exchange);return;
-            default: throw new UnsupportedOperationException();
+        switch (endpoint.getPojoDirection()) {
+            case FROM:
+                processDirectionFromPojo(exchange);
+                return;
+            case TO:
+                processDirectionToPojo(exchange);
+                return;
+            default:
+                throw new UnsupportedOperationException();
         }
     }
 
-    private void processDirectionFromPojo(Exchange exchange) throws Exception{
+    private void processDirectionFromPojo(Exchange exchange) throws Exception {
 
         Message in = exchange.getIn();
         Object body = in.getMandatoryBody();
@@ -60,16 +65,17 @@ public class PojoMapperProducer extends DefaultProducer {
                 String key = computeKey(f);
                 boolean oldIsAccessible = f.isAccessible();
                 f.setAccessible(true);
-                if (endpoint.getFieldLocation() == FieldLocation.PROPERTY){
+                if (endpoint.getFieldLocation() == FieldLocation.PROPERTY) {
                     exchange.setProperty(key, f.get(body));
-                } else if (endpoint.getFieldLocation() == FieldLocation.HEADER){
+                } else if (endpoint.getFieldLocation() == FieldLocation.HEADER) {
                     exchange.getIn().setHeader(key, f.get(body));
                 }
                 f.setAccessible(oldIsAccessible);
             }
         });
     }
-    private void processDirectionToPojo(Exchange exchange) throws Exception{
+
+    private void processDirectionToPojo(Exchange exchange) throws Exception {
         Message in = exchange.getIn();
         Object body = in.getMandatoryBody();
 
@@ -80,14 +86,14 @@ public class PojoMapperProducer extends DefaultProducer {
 
                 String key = computeKey(f);
 
-                if (!isValid(key,exchange)) {
+                if (!isValid(key, exchange)) {
                     String message = String.format("Field %s#%s of type %s, key %s not found",
                             f.getDeclaringClass().getSimpleName(), f.getName(), f.getType(), key);
                     CamelLogger.log(
                             LOG, endpoint.getMissingSourceLevel(),
                             message
                     );
-                    if (endpoint.isThrowExceptionOnMissingSource() || isRequired(f)){
+                    if (endpoint.isThrowExceptionOnMissingSource() || isRequired(f)) {
                         throw new IllegalStateException(message);
                     }
                     return;
@@ -118,26 +124,26 @@ public class PojoMapperProducer extends DefaultProducer {
         return key;
     }
 
-    private <T> T getValue(String key, Class<T> clazz, Exchange exchange){
-        if (endpoint.getFieldLocation()== FieldLocation.HEADER){
+    private <T> T getValue(String key, Class<T> clazz, Exchange exchange) {
+        if (endpoint.getFieldLocation() == FieldLocation.HEADER) {
             return exchange.getIn().getHeader(key, clazz);
         }
-        if (endpoint.getFieldLocation()== FieldLocation.PROPERTY){
+        if (endpoint.getFieldLocation() == FieldLocation.PROPERTY) {
             return exchange.getProperty(key, clazz);
         }
-        if (endpoint.getFieldLocation()== FieldLocation.HEADER_PROPERTY){
-            if (hasHeader(key,exchange)){
+        if (endpoint.getFieldLocation() == FieldLocation.HEADER_PROPERTY) {
+            if (hasHeader(key, exchange)) {
                 return exchange.getIn().getHeader(key, clazz);
             }
-            if (hasProperty(key,exchange)){
+            if (hasProperty(key, exchange)) {
                 return exchange.getProperty(key, clazz);
             }
         }
-        if (endpoint.getFieldLocation()== FieldLocation.PROPERTY_HEADER){
-            if (hasProperty(key,exchange)){
+        if (endpoint.getFieldLocation() == FieldLocation.PROPERTY_HEADER) {
+            if (hasProperty(key, exchange)) {
                 return exchange.getProperty(key, clazz);
             }
-            if (hasHeader(key,exchange)){
+            if (hasHeader(key, exchange)) {
                 return exchange.getIn().getHeader(key, clazz);
             }
         }
@@ -153,24 +159,24 @@ public class PojoMapperProducer extends DefaultProducer {
         return field.isAnnotationPresent(PojoMapper.class) && field.getAnnotation(PojoMapper.class).required();
     }
 
-    private boolean isValid(String key, Exchange exchange){
-        if (endpoint.getFieldLocation()== FieldLocation.HEADER){
+    private boolean isValid(String key, Exchange exchange) {
+        if (endpoint.getFieldLocation() == FieldLocation.HEADER) {
             return hasHeader(key, exchange);
         }
-        if (endpoint.getFieldLocation()== FieldLocation.PROPERTY){
+        if (endpoint.getFieldLocation() == FieldLocation.PROPERTY) {
             return hasProperty(key, exchange);
         }
-        if (Arrays.asList(FieldLocation.HEADER_PROPERTY, FieldLocation.PROPERTY_HEADER).contains(endpoint.getFieldLocation())){
-            return hasProperty(key,exchange) || hasHeader(key, exchange);
+        if (Arrays.asList(FieldLocation.HEADER_PROPERTY, FieldLocation.PROPERTY_HEADER).contains(endpoint.getFieldLocation())) {
+            return hasProperty(key, exchange) || hasHeader(key, exchange);
         }
-        throw new UnsupportedOperationException(endpoint.getFieldLocation()+" not implemented");
+        throw new UnsupportedOperationException(endpoint.getFieldLocation() + " not implemented");
     }
 
-    private boolean hasHeader(String key, Exchange exchange){
+    private boolean hasHeader(String key, Exchange exchange) {
         return exchange.getIn().hasHeaders() && exchange.getIn().getHeaders().containsKey(key);
     }
 
-    private boolean hasProperty(String key, Exchange exchange){
+    private boolean hasProperty(String key, Exchange exchange) {
         return exchange.hasProperties() && exchange.getProperties().containsKey(key);
     }
 

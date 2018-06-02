@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface PojoMapper {
     boolean ignore() default false;
+
     String key() default "";
+
     boolean required() default false;
 }
